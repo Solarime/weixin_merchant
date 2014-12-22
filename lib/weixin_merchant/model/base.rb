@@ -10,7 +10,7 @@ module WeixinMerchant::Model
       EOF
       end
 
-      !self.const_defined?(:TEXT_FIELDS) ||
+      !self.const_defined?(:MONEY_FIELDS) ||
         self::MONEY_FIELDS.each do |param| self.class_eval <<-EOF
       def #{param} 
         Money.new(@info['#{param}'], 'CNY')
@@ -18,10 +18,10 @@ module WeixinMerchant::Model
       EOF
       end
 
-      !self.const_defined?(:TEXT_FIELDS) ||
+      !self.const_defined?(:TIME_FIELDS) ||
         self::TIME_FIELDS.each do |param| self.class_eval <<-EOF
       def #{param} 
-        Time.at(@info['#{param}'])
+        Time.at(@info['#{param}']) rescue nil
       end
       EOF
       end
