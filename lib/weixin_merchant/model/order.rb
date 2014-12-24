@@ -21,6 +21,7 @@ module WeixinMerchant::Model
       :product_price,
       :product_sku,
       :product_img,
+      :product_count,
       :delivery_id,
       :delivery_company,
       :trans_id

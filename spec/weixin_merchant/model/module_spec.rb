@@ -1,31 +1,36 @@
 require 'spec_helper'
 describe WeixinMerchant::Model do
 
-  let(:subject) { WeixinMerchant::Model }
+  let(:subject)               { WeixinMerchant::Model }
+  let(:get_order_result)      { double(result: order_info) }
+  let(:get_order_list_result) { double(result: { 'order_list' => [order_info['order'], order_info['order']]}) }
+  let(:bad_result)            { double('order_result_with_array', result: [order_info, order_info]) }
+
   it "generates the correct object" do
-    expect(subject.from( double('WeixinAuthorize::ResultHandler', result: order_info))).to be_a WeixinMerchant::Model::Order
+    expect(subject.from( get_order_result )).to be_a WeixinMerchant::Model::Order
   end
   
   it "generates the correct object with explicit API" do
-    expect(subject.from( double('WeixinAuthorize::ResultHandler', result: order_info), :order)).to be_a WeixinMerchant::Model::Order
+    expect(subject.from( get_order_result, :order )).to be_a WeixinMerchant::Model::Order
   end
 
   it "raises error for incorrect api" do
-    expect {subject.from( double('WeixinAuthorize::ResultHandler', result: [order_info, order_info]), :wrong_api)}.to raise_error RuntimeError, /Could not handle/
+    expect {subject.from( get_order_result, :wrong_api )}.to raise_error RuntimeError, /Could not handle/
+    expect {subject.from( get_order_list_result, :wrong_api )}.to raise_error RuntimeError, /Could not handle/
   end
 
   it "generates a list of correct objects" do
-    list = subject.from( double('WeixinAuthorize::ResultHandler', result: {'order_list' => [order_info['order'], order_info['order']]}))
+    list = subject.from( get_order_list_result )
     expect(list.size).to eq 2
     expect(list).to contain_exactly an_instance_of(WeixinMerchant::Model::Order),an_instance_of(WeixinMerchant::Model::Order)
     expect(list).to match [an_instance_of(WeixinMerchant::Model::Order),an_instance_of(WeixinMerchant::Model::Order)]
-    expect(list[0].order_id).to eq subject.from( double('WeixinAuthorize::ResultHandler', result: order_info)).order_id
+    expect(list[0].order_id).to eq subject.from( get_order_result ).order_id
     #FIXME: this should work
-    #expect(list[0]).to eq subject.from( double('WeixinAuthorize::ResultHandler', result: order_info))
+    #expect(list[0]).to eq subject.from( get_order_result)
   end
 
   it "raises error for a response with multiple 'results'" do
-    expect {subject.from( double('WeixinAuthorize::ResultHandler', result: [order_info, order_info]))}.to raise_error RuntimeError, /Could not handle/
+    expect {subject.from( bad_result )}.to raise_error RuntimeError, /Could not handle/
   end
 
   def order_info

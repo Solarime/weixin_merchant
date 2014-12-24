@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe WeixinMerchant::Model::User do
-  let(:user) { WeixinMerchant::Model.from( double('WeixinAuthorize::ResultHandler', result: user_info), :user)}
+  let(:user) { WeixinMerchant::Model.from( double('user_result', result: user_info), :user)}
 
   specify {
     expect( user ).to be_a WeixinMerchant::Model::User

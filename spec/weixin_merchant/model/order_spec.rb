@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe WeixinMerchant::Model::Order do
-  let(:order) { WeixinMerchant::Model.from( double('WeixinAuthorize::ResultHandler', result: order_info), :order)}
+  let(:order) { WeixinMerchant::Model.from( double('get_order_result', result: order_info), :order)}
 
   specify { expect(order.order_id).to eq(order_info['order']['order_id'])}
   specify { expect(order.order_status).to eq(order_info['order']['order_status'])}

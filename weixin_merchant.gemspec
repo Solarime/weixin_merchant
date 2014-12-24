@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = WeixinMerchant::VERSION
   spec.authors       = ["叶树剑"]
   spec.email         = ["yeshujian@shiguangcaibei.com"]
-  spec.summary       = %q{For Weixin Merchant funcationalities.}
+  spec.summary       = %q{For Weixin Merchant functionalities.}
   spec.description   = %q{The business logic according to Weixin's spec}
   spec.homepage      = "https://github.com/dapic/weixin_merchant"
   spec.license       = "MIT"
@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "weixin_authorize"
   spec.add_dependency "money", "< 7.0.0"
 
   spec.add_development_dependency "bundler", "~> 1.7"

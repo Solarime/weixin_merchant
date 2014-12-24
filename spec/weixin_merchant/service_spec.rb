@@ -1,28 +1,27 @@
 require 'spec_helper'
 
 describe WeixinMerchant::Service do
-  before(:each) { 
-    RestClient.log = Logger.new(STDOUT)
-    $client = double(
-      'WeixinAuthorize::Client',
+  let(:service) { WeixinMerchant::Service.new(
+    double(
+      'auth_client',
       is_valid?: true,
-      user: double('WeixinAuthorize::ResultHandler', result: user_info), 
-      get_order: double('WeixinAuthorize::ResultHandler', result: order_info)
-    )
+      user: double(result: user_info), 
+      get_order: double(result: order_info)
+    ))
   }
 
-  it "has a valid weixin_authorize client" do
-    expect( WeixinMerchant::Service.client).to be_is_valid
+  it "has a valid weixin_authorize client (not necessarily of any specific class)" do
+    expect( service.client ).to be_is_valid
   end
 
   it "retrieves user info" do
-    user = WeixinMerchant::Service.get_user("someopenid")
+    user = service.get_user("someopenid")
     expect( user ).to be_a WeixinMerchant::Model::User
     expect( user.openid ).to eq user_info['openid']
   end
 
   it "retrieves order info" do
-    order = WeixinMerchant::Service.get_order("someorderid")
+    order = service.get_order("someorderid")
     expect( order ).to be_a WeixinMerchant::Model::Order
     expect( order.order_id ).to eq order_info['order']['order_id']
   end
